@@ -44,37 +44,37 @@ According to the **World Health Organization (WHO)**, over **2.2 billion individ
 
 ```mermaid
 graph TD
-    A[Raw Color Fundus Image\n224x224x3] --> B[Dual-Stream Preprocessing Engine]
+    A["Raw Color Fundus Image (224x224x3)"] --> B["Dual-Stream Preprocessing Engine"]
     
-    subgraph Preprocessing [Dual-Stream Clinical Preprocessing]
-        B --> B1[Stream 1: Green-Channel CLAHE\nClip Limit 2.0, 8x8 Grid]
-        B --> B2[Stream 2: Canny Edge Gradient\nSobel Hysteresis: 50, 150]
-        B --> B3[Stream 3: CIE-LAB Luminance CLAHE\nIllumination Normalization]
-        B1 --> B4[Composite Tensor T\n3x224x224]
+    subgraph Preprocessing ["Dual-Stream Clinical Preprocessing"]
+        B --> B1["Stream 1: Green-Channel CLAHE (Clip Limit 2.0, 8x8 Grid)"]
+        B --> B2["Stream 2: Canny Edge Gradient (Sobel Hysteresis: 50, 150)"]
+        B --> B3["Stream 3: CIE-LAB Luminance CLAHE (Illumination Normalization)"]
+        B1 --> B4["Composite Tensor T (3x224x224)"]
         B2 --> B4
         B3 --> B4
     end
 
-    B4 --> C[14-Layer OcuNet-CBAM Backbone]
+    B4 --> C["14-Layer OcuNet-CBAM Backbone"]
 
-    subgraph Deep_Learning [OcuNet-CBAM Feature Extraction]
-        C --> D1[Block 1: Conv 3->32 + BN + ReLU + CBAM_32 + MaxPool]
-        D1 --> D2[Block 2: Conv 32->64 + BN + ReLU + CBAM_64 + MaxPool]
-        D2 --> D3[Block 3: Conv 64->128 + BN + ReLU + CBAM_128 + MaxPool]
-        D3 --> D4[Block 4: Conv 128->256 + BN + ReLU + CBAM_256 + AdaptiveAvgPool]
+    subgraph Deep_Learning ["OcuNet-CBAM Feature Extraction"]
+        C --> D1["Block 1: Conv 3 to 32 + BN + ReLU + CBAM_32 + MaxPool"]
+        D1 --> D2["Block 2: Conv 32 to 64 + BN + ReLU + CBAM_64 + MaxPool"]
+        D2 --> D3["Block 3: Conv 64 to 128 + BN + ReLU + CBAM_128 + MaxPool"]
+        D3 --> D4["Block 4: Conv 128 to 256 + BN + ReLU + CBAM_256 + AdaptiveAvgPool"]
     end
 
-    subgraph Attention_Mechanism [CBAM Sequential Attention]
-        E1[Feature Map F] --> E2[Channel Attention Mc: AvgPool + MaxPool + Shared MLP r=16]
-        E2 --> E3[Spatial Attention Ms: Channel Pool + 7x7 Conv + Sigmoid]
+    subgraph Attention_Mechanism ["CBAM Sequential Attention"]
+        E1["Feature Map F"] --> E2["Channel Attention Mc: AvgPool + MaxPool + Shared MLP r=16"]
+        E2 --> E3["Spatial Attention Ms: Channel Pool + 7x7 Conv + Sigmoid"]
     end
 
-    D4 --> F[Multi-Class Focal Loss Optimization\ngamma=2.0, alpha-weighted]
-    D4 --> G[Classifier Head: Linear 256->128 + Dropout 0.4 + Linear 128->4]
+    D4 --> F["Multi-Class Focal Loss Optimization (gamma=2.0, alpha-weighted)"]
+    D4 --> G["Classifier Head: Linear 256 to 128 + Dropout 0.4 + Linear 128 to 4"]
     
-    G --> H[Diagnostic Output: Cataract | DR | Glaucoma | Normal]
-    D4 --> I[Explainable AI: Grad-CAM Saliency Map on model.block4.conv]
-    I --> J[Clinician Verification Heatmap Overlay]
+    G --> H["Diagnostic Output: Cataract / DR / Glaucoma / Normal"]
+    D4 --> I["Explainable AI: Grad-CAM Saliency Map on model.block4.conv"]
+    I --> J["Clinician Verification Heatmap Overlay"]
 ```
 
 ![System Architecture](paper/figures/system_architecture.png)
@@ -258,12 +258,19 @@ Train or test the model directly in your browser using free GPU resources with o
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-If you find this repository or methodology useful in your research, please cite:
+### Plain Text (IEEE Format):
+> S. P. Singh, S. Shukla, K. Shukla, A. Bansal, Yogesh, D. Yadav, and A. Jain, "Dual-Stream Attention-Guided Deep Learning with Explainable AI for Multi-Ocular and Cataract Screening in Medical Cyber-Physical Systems," *Capstone Phase 1 Research Archive*, VIT Bhopal University, 2026.
+
+### BibTeX:
 ```bibtex
 @article{eyecap2026ocunet,
-  title={Dual-Stream Attention-Guided Deep Learning with Explainable AI for Multi-Ocular and Cataract Screening in Medical Cyber-Physical Systems},
-  author={Singh, Shashwat Pratap and Shukla, Shashwat and Shukla, Kaushtubham and Bansal, Aryan and Yogesh and Yadav, Divyanshu and Jain, Ankur},
-  journal={Capstone Phase 1 Research Archive, VIT Bhopal University},
-  year={2026}
+  title     = {Dual-Stream Attention-Guided Deep Learning with Explainable AI
+               for Multi-Ocular and Cataract Screening in Medical
+               Cyber-Physical Systems},
+  author    = {Singh, Shashwat Pratap and Shukla, Shashwat and
+               Shukla, Kaushtubham and Bansal, Aryan and
+               Yogesh and Yadav, Divyanshu and Jain, Ankur},
+  journal   = {Capstone Phase 1 Research Archive, VIT Bhopal University},
+  year      = {2026}
 }
 ```
