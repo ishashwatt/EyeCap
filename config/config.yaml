@@ -1,0 +1,91 @@
+# Global Configuration for AI-Based Eye Disease & Cataract Detection (MCPS)
+
+project:
+  name: "EyeCap-MCPS"
+  version: "1.0.0"
+  random_seed: 42
+
+dataset:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  sample_data_dir: "data/sample_data"
+  image_size: [224, 224]
+  num_classes: 4
+  classes:
+    - "Cataract"
+    - "Diabetic_Retinopathy"
+    - "Glaucoma"
+    - "Normal"
+  split_ratios:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+  batch_size: 16
+  num_workers: 2
+
+preprocessing:
+  use_green_channel: true
+  clahe:
+    clip_limit: 2.0
+    tile_grid_size: [8, 8]
+  canny:
+    low_threshold: 50
+    high_threshold: 150
+  gaussian_blur:
+    kernel_size: [3, 3]
+    sigma: 0.5
+  output_channels: 3 # [CLAHE_Green, Canny_Edge, Enhanced_Grayscale]
+
+augmentation:
+  enabled: true
+  rotation_angles: [15, 30, 45]
+  horizontal_flip_prob: 0.5
+  zoom_range: [0.85, 1.15]
+  brightness_contrast: true
+
+model:
+  architecture: "ocunet_cbam" # Options: ocunet_cbam, densenet121, efficientnet_b0, hybrid_ensemble
+  ocunet:
+    in_channels: 3
+    num_classes: 4
+    base_filters: 32
+    dropout_rate: 0.4
+    use_cbam: true
+  transfer:
+    pretrained: true
+    freeze_backbone: false
+
+training:
+  epochs: 25
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  loss_function: "focal_loss" # Options: focal_loss, cross_entropy, label_smoothing
+  focal_loss:
+    gamma: 2.0
+    alpha: null # Auto-calculated based on class frequencies if null
+  optimizer: "adamw" # Options: adamw, adam, sgd
+  scheduler: "cosine_annealing"
+  early_stopping:
+    patience: 7
+    min_delta: 0.001
+  device: "cuda" # Auto-fallback to cpu if cuda not available
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "specificity"
+    - "mcc"
+    - "roc_auc"
+  save_plots: true
+  output_dir: "experiments/results"
+
+explainability:
+  gradcam:
+    target_layer: "block4"
+    colormap: "jet"
+  shap:
+    num_background_samples: 50
+    num_eval_samples: 10

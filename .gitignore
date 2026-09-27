@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Testing caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large Raw Datasets (Download instructions provided in README)
+data/raw/
+*.zip
+*.tar.gz
+
+# Internal preparation guides & draft notes
+TEAM_DEFENSE_AND_PREPARATION_GUIDE.*
+*.log
+
+# Paper LaTeX sources (Manuscript submitted via conference portal)
+paper/*.tex
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+
+# OS / IDE generated files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
